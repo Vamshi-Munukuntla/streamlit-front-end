@@ -11,8 +11,8 @@ model_training = st.container()
 
 @st.cache_data
 def get_data(filename):
-    df = pd.read_csv('data/taxi_data.csv')
-    return df
+    taxi_data = pd.read_csv('data/taxi_data.csv')
+    return taxi_data
 
 
 with header:
@@ -24,7 +24,7 @@ with dataset:
     st.text('I found this dataset on uber.com...')
 
     taxi_data = get_data('data/taxi_data.csv')
-    # st.write(taxi_data.head())
+    st.write(taxi_data.head())
 
     st.subheader("Pick-up location ID distribution on the NYC dataset")
     pulocation_dist = pd.DataFrame(taxi_data['PULocationID'].value_counts())
@@ -53,7 +53,7 @@ with model_training:
     sel_col.text('Here is a list of features in my data:')
     sel_col.write(taxi_data.columns)
 
-    input_feature = sel_col.text_input('Which feature should be used as the input feature',
+    input_feature = sel_col.text_input('Which feature should be used as the input feature?',
                                        "PULocationID")
 
     if n_estimators == 'No Limit':
@@ -63,7 +63,7 @@ with model_training:
                                      n_estimators=n_estimators)
 
     X = taxi_data[[input_feature]]
-    y = taxi_data[['trip_distance']]
+    y = taxi_data[['PULocationID']]
 
     regr.fit(X, y)
     prediction = regr.predict(y)
